@@ -40,7 +40,8 @@ function clearFlash() {
 function splitWords() {
     var words = document.getElementById("message").value.trim().split(" ");
     words.forEach(function(word) {
-      postWord(word)
+      var cleanWord = word.replace(/[&\/\\#,+!()$~%.'":*?<>{}]/g, '');
+      postWord(cleanWord)
     })
 }
 
