@@ -9,7 +9,8 @@ function getTopWord() {
     $(".word-count").html(`<h3>${top_word}<br> word count: ${word.word[top_word]}</h3>`)
   },
   error: function(response) {
-    alert(response.responseJSON.error);
+    $('#flash-container').append(`Error: ${response.responseJSON.error}.`);
+    clearFlash()
   }
   })
 }
@@ -20,18 +21,26 @@ function postWord(input) {
     url: 'https://wordwatch-api.herokuapp.com/api/v1/words',
     data: { "word": { "value": input } },
     success: function(response) {
-      $('#flash-container').append(`${response.message}`)
+      $('#flash-container').append(`<h5>${response.message}<br></h5>`)
+      clearFlash();
     },
     error: function(response) {
-    alert(response.responseJSON.error);
+      $('#flash-container').append(`Error: ${response.responseJSON.error}`);
+      clearFlash()
     }
   })
+}
+
+function clearFlash() {
+  setTimeout(function(){
+    $('#flash-container').remove();
+  }, 3000);
 }
 
 function splitWords() {
     var words = document.getElementById("message").value.trim().split(" ");
     words.forEach(function(word) {
-      setTimeout(postWord(word), 5000);
+      postWord(word)
     })
 }
 
@@ -41,5 +50,4 @@ $(document).ready(() => {
 $("#breakdown-btn").on('click', function(){
   splitWords();
 });
-
 });
