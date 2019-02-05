@@ -81,22 +81,56 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 
 
-
 function getTopWord() {
   __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
   type: 'GET',
-  url: 'https://wordwatch-api.herokuapp.com/api/v1/words',
+  url: 'https://wordwatch-api.herokuapp.com/api/v1/top_word',
   success: function(word) {
-    console.log(word)
+    var top_word = Object.keys(word.word)[0]
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()(".word-count").html(`<h3>${top_word}<br> word count: ${word.word[top_word]}</h3>`)
   },
   error: function(response) {
-    alert(response.responseJSON.error);
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#flash-container').append(`Error: ${response.responseJSON.error}.`);
+    clearFlash()
   }
   })
 }
 
+function postWord(input) {
+  __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
+    type: 'POST',
+    url: 'https://wordwatch-api.herokuapp.com/api/v1/words',
+    data: { "word": { "value": input } },
+    success: function(response) {
+      __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#flash-container').append(`<h5>${response.message}<br></h5>`)
+      clearFlash();
+    },
+    error: function(response) {
+      __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#flash-container').append(`Error: ${response.responseJSON.error}`);
+      clearFlash()
+    }
+  })
+}
+
+function clearFlash() {
+  setTimeout(function(){
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#flash-container').remove();
+  }, 3000);
+}
+
+function splitWords() {
+    var words = document.getElementById("message").value.trim().split(" ");
+    words.forEach(function(word) {
+      postWord(word)
+    })
+}
+
 __WEBPACK_IMPORTED_MODULE_0_jquery___default()(document).ready(() => {
   getTopWord();
+
+__WEBPACK_IMPORTED_MODULE_0_jquery___default()("#breakdown-btn").on('click', function(){
+  splitWords();
+});
 });
 
 

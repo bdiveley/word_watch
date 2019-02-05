@@ -1,6 +1,6 @@
 const fs = require("fs")
 const { JSDOM } = require("jsdom")
-const html = fs.readFileSync("index.html")
+const html = fs.readFileSync("./docs/index.html")
 const dom = new JSDOM(html);
 
 global.window = dom.window
